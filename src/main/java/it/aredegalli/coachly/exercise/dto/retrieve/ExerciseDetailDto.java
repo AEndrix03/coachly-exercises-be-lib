@@ -23,51 +23,13 @@ public class ExerciseDetailDto {
     private String forceType;
     private boolean isUnilateral;
     private boolean isBodyweight;
-    private EnvironmentDto environment;
-    private List<InstructionDto> instructions;
-    private MovementPatternDto movementPattern;
     private List<VariantDto> variants;
     private List<MediaDto> media;
     private List<CategoryNodeDto> categories;
     private List<SafetyDto> safety;
-    private List<SafetyContraindicationDto> safetyContraindications;
     private List<MuscleAssociationDto> muscles;
     private List<EquipmentAssociationDto> equipments;
     private List<TagDto> tags;
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class EnvironmentDto {
-        private UUID id;
-        private Boolean canDoAtHome;
-        private Boolean canDoInGym;
-        private Boolean equipmentSetupRequired;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class InstructionDto {
-        private UUID id;
-        private String instructionType;
-        private Integer stepNumber;
-        private Map<String, String> instructionTextI18n;
-        private Boolean isCritical;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class MovementPatternDto {
-        private UUID id;
-        private String movementPlane;
-        private String movementPattern;
-        private String powerGenerationLevel;
-    }
 
     @Data
     @Builder
@@ -83,7 +45,6 @@ public class ExerciseDetailDto {
         private String forceType;
         private boolean isUnilateral;
         private boolean isBodyweight;
-        private String variationType;
         private Integer difficultyDelta;
     }
 
@@ -131,21 +92,8 @@ public class ExerciseDetailDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SafetyContraindicationDto {
-        private UUID id;
-        private String contraindicationType;
-        private String conditionName;
-        private Map<String, String> warningTextI18n;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class MuscleAssociationDto {
         private NamedResourceDto muscle;
-        private String involvementLevel;
-        private NamedResourceDto primaryContractionType;
         private Integer activationPercentage;
     }
 
