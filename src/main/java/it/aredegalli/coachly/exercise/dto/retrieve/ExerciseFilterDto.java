@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExerciseFilterDto {
+    private String scope;
     private String textFilter;
     private String langFilter;
     private String difficultyLevel;

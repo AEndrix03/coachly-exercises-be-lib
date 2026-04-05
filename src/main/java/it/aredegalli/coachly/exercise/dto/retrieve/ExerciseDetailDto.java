@@ -15,6 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ExerciseDetailDto {
     private UUID id;
+    private UUID createdBy;
+    private boolean personal;
     private Map<String, String> nameI18n;
     private Map<String, String> descriptionI18n;
     private Map<String, String> tipsI18n;
