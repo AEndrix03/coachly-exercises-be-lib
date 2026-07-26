@@ -4,5 +4,15 @@ public enum ForceType {
     PUSH,
     PULL,
     STATIC,
-    CARRY
+    CARRY,
+    DYNAMIC,
+    EXPLOSIVE,
+    CONCENTRIC,
+    ECCENTRIC,
+    ISOMETRIC,
+    PLYOMETRIC,
+    ROTATION,
+    NONE,
+    PULL_VERTICAL,
+    PULL_HORIZONTAL
 }
