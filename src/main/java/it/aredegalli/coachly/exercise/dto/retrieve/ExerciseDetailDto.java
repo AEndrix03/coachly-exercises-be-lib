@@ -32,6 +32,49 @@ public class ExerciseDetailDto {
     private List<MuscleAssociationDto> muscles;
     private List<EquipmentAssociationDto> equipments;
     private List<TagDto> tags;
+    private BiomechanicsDto biomechanics;
+
+    /**
+     * Where the external load actually peaks along the range of motion, and
+     * what causes it.
+     *
+     * <p>{@code resistanceCurve} is {@code ascending} when the exercise is
+     * hardest at the start of the concentric (stretched position) and
+     * {@code descending} when it is hardest at the end (shortened position);
+     * {@code peakTorqueRomPct} carries the same information numerically and
+     * should be preferred when drawing charts.
+     *
+     * <p>{@code dataConfidence} is never {@code measured} for generated rows:
+     * clients must not present {@code estimated} values as experimental fact.
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BiomechanicsDto {
+        private String resistanceSource;
+        private String resistanceCurve;
+        private Integer peakTorqueRomPct;
+        private String momentArmProfile;
+        private Integer momentArmPeakRomPct;
+        private String stabilityDemand;
+        private String axialLoad;
+        private Integer sfrRating;
+        private Map<String, String> jointPositionBias;
+        private List<StrengthCurvePointDto> strengthCurvePoints;
+        private String dataConfidence;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class StrengthCurvePointDto {
+        /** 0 = target muscle fully lengthened, 100 = fully shortened. */
+        private Double romPct;
+        /** External torque at that point, scaled so the curve peak is 100. */
+        private Integer relativeLoad;
+    }
 
     @Data
     @Builder
@@ -97,6 +140,18 @@ public class ExerciseDetailDto {
     public static class MuscleAssociationDto {
         private NamedResourceDto muscle;
         private Integer activationPercentage;
+        /** lengthened / mid_range / shortened, relative to THIS muscle. */
+        private String lengthBias;
+        private Integer romStretchPct;
+        private Integer romContractPct;
+        /**
+         * Residual external load at maximum muscle length: distinguishes an
+         * exercise that merely reaches the stretch from one that loads it.
+         */
+        private Integer tensionAtStretch;
+        private Integer tensionAtContraction;
+        private boolean activeInsufficiency;
+        private boolean passiveInsufficiency;
     }
 
     @Data
