@@ -21,6 +21,7 @@ public class ExerciseSummaryDto {
     private String exerciseKind;
     private String technicalDemand;
     private String jointClass;
+    private String kineticChain;
     private boolean isUnilateral;
     private boolean isBodyweight;
 }

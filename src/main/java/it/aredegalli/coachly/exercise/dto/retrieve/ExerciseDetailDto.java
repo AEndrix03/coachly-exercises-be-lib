@@ -35,11 +35,15 @@ public class ExerciseDetailDto {
     private Map<String, String> nameI18n;
     private Map<String, String> descriptionI18n;
     private Map<String, String> tipsI18n;
+    /** Execution errors, one entry per mistake, per locale. */
+    private Map<String, List<String>> commonMistakesI18n;
 
     private FamilyDto family;
     private String exerciseKind;
     private String technicalDemand;
     private String jointClass;
+    /** open = distal segment free; closed = fixed against a surface. */
+    private String kineticChain;
     private String catalogStatus;
     private boolean isUnilateral;
     private boolean isBodyweight;
@@ -180,6 +184,8 @@ public class ExerciseDetailDto {
     public static class SafetyDto {
         private String spotterPolicy;
         private Map<String, String> notesI18n;
+        /** Same shape as commonMistakesI18n: one entry per note, per locale. */
+        private Map<String, List<String>> notesListI18n;
     }
 
     @Data
@@ -194,6 +200,7 @@ public class ExerciseDetailDto {
         private String exerciseKind;
         private String technicalDemand;
         private String jointClass;
+        private String kineticChain;
         private boolean isUnilateral;
         private boolean isBodyweight;
         /** WHAT differs from this exercise: grip, angle, equipment, rom... */

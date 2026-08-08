@@ -43,6 +43,7 @@ public class ExerciseFilterDto {
     // characteristics
     private String exerciseKind;
     private String jointClass;
+    private String kineticChain;
     private String technicalDemand;
     private Boolean isUnilateral;
     private Boolean isBodyweight;

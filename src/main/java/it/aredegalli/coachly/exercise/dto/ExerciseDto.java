@@ -3,6 +3,7 @@ package it.aredegalli.coachly.exercise.dto;
 import it.aredegalli.coachly.exercise.enums.CatalogStatus;
 import it.aredegalli.coachly.exercise.enums.ExerciseKind;
 import it.aredegalli.coachly.exercise.enums.JointClass;
+import it.aredegalli.coachly.exercise.enums.KineticChain;
 import it.aredegalli.coachly.exercise.enums.SpotterPolicy;
 import it.aredegalli.coachly.exercise.enums.TechnicalDemand;
 import it.aredegalli.coachly.exercise.enums.Visibility;
@@ -25,6 +26,7 @@ public class ExerciseDto {
     private ExerciseKind exerciseKind;
     private TechnicalDemand technicalDemand;
     private JointClass jointClass;
+    private KineticChain kineticChain;
     private boolean unilateral;
     private boolean bodyweight;
     private SpotterPolicy spotterPolicy;
