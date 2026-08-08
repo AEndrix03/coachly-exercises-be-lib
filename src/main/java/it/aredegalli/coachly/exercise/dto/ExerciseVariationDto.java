@@ -1,5 +1,6 @@
 package it.aredegalli.coachly.exercise.dto;
 
+import it.aredegalli.coachly.exercise.enums.VariationAxis;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,6 @@ import java.util.UUID;
 public class ExerciseVariationDto {
     private UUID baseExerciseId;
     private UUID variantExerciseId;
-    private String variationType;
-    private Integer difficultyDelta;
+    /** WHAT differs between the two: grip, angle, equipment, rom, tempo... */
+    private VariationAxis variationAxis;
 }
