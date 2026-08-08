@@ -9,71 +9,177 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * The exercise as the catalogue knows it. Four axes, and nothing else:
+ *
+ * <ol>
+ *   <li>what moves - movement patterns and joint actions</li>
+ *   <li>what is trained - muscle involvement and tension profile</li>
+ *   <li>how it is loaded - equipment, stability, spinal loading</li>
+ *   <li>how it is recorded - tracking and comparison context</li>
+ * </ol>
+ *
+ * <p>Deliberately absent: goals, scores, SFR, recommended sets or reps. Those
+ * are decisions computed from context, not properties of an exercise.
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExerciseDetailDto {
     private UUID id;
+    /** Stable identity key. {@code name} may change, this does not. */
+    private String code;
     private UUID createdBy;
     private boolean personal;
     private Map<String, String> nameI18n;
     private Map<String, String> descriptionI18n;
     private Map<String, String> tipsI18n;
-    private String difficultyLevel;
-    private String mechanicsType;
-    private String forceType;
+
+    private FamilyDto family;
+    private String exerciseKind;
+    private String technicalDemand;
+    private String jointClass;
+    private String catalogStatus;
     private boolean isUnilateral;
     private boolean isBodyweight;
+
+    private MovementProfileDto movementProfile;
+    private List<MuscleAssociationDto> muscles;
+    private BiomechanicsDto biomechanics;
+    private TrackingDto tracking;
+    private SafetyDto safety;
+
+    private List<EquipmentAssociationDto> equipments;
     private List<VariantDto> variants;
     private List<MediaDto> media;
-    private List<CategoryNodeDto> categories;
-    private List<SafetyDto> safety;
-    private List<MuscleAssociationDto> muscles;
-    private List<EquipmentAssociationDto> equipments;
+    private List<CategoryDto> categories;
     private List<TagDto> tags;
-    private BiomechanicsDto biomechanics;
 
-    /**
-     * Where the external load actually peaks along the range of motion, and
-     * what causes it.
-     *
-     * <p>{@code resistanceCurve} is {@code ascending} when the exercise is
-     * hardest at the start of the concentric (stretched position) and
-     * {@code descending} when it is hardest at the end (shortened position);
-     * {@code peakTorqueRomPct} carries the same information numerically and
-     * should be preferred when drawing charts.
-     *
-     * <p>{@code dataConfidence} is never {@code measured} for generated rows:
-     * clients must not present {@code estimated} values as experimental fact.
-     */
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class BiomechanicsDto {
-        private String resistanceSource;
-        private String resistanceCurve;
-        private Integer peakTorqueRomPct;
-        private String momentArmProfile;
-        private Integer momentArmPeakRomPct;
-        private String stabilityDemand;
-        private String axialLoad;
-        private Integer sfrRating;
-        private Map<String, String> jointPositionBias;
-        private List<StrengthCurvePointDto> strengthCurvePoints;
-        private String dataConfidence;
+    public static class FamilyDto {
+        private UUID id;
+        private String code;
+        private Map<String, String> nameI18n;
     }
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class StrengthCurvePointDto {
-        /** 0 = target muscle fully lengthened, 100 = fully shortened. */
-        private Double romPct;
-        /** External torque at that point, scaled so the curve peak is 100. */
-        private Integer relativeLoad;
+    public static class MovementProfileDto {
+        private List<MovementPatternDto> patterns;
+        private List<JointActionDto> jointActions;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MovementPatternDto {
+        private UUID id;
+        private String code;
+        private Map<String, String> nameI18n;
+        /** primary or secondary */
+        private String role;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JointActionDto {
+        private UUID id;
+        private String jointCode;
+        private String actionCode;
+        private Map<String, String> nameI18n;
+        private String role;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MuscleAssociationDto {
+        private NamedResourceDto muscle;
+        private List<MuscleGroupDto> groups;
+        /** primary, secondary or stabilizer */
+        private String involvement;
+        private TensionProfileDto tensionProfile;
+        private String evidenceBasis;
+        private String confidence;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MuscleGroupDto {
+        private UUID id;
+        private String code;
+        private String groupType;
+        private Map<String, String> nameI18n;
+    }
+
+    /**
+     * Qualitative tension at three muscle lengths. {@code lengthBias} is
+     * DERIVED from the three - it is not stored - so it can never disagree
+     * with them.
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TensionProfileDto {
+        private String lengthened;
+        private String midrange;
+        private String shortened;
+        /** lengthened / mid_range / shortened / broad, computed on read. */
+        private String lengthBias;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BiomechanicsDto {
+        private String resistanceSource;
+        private String stabilityDemand;
+        private String spinalLoading;
+        private String externalResistanceProfile;
+        private String evidenceBasis;
+        private String confidence;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TrackingDto {
+        private String trackingType;
+        /**
+         * per_implement means the logged number is the load of a SINGLE
+         * implement: a 32 kg dumbbell curl is logged as 32, not 64.
+         */
+        private String loadInputMode;
+        private String sideMode;
+        /**
+         * How far this load may legitimately be compared: across gyms, only
+         * within one machine, or bodyweight-adjusted.
+         */
+        private String comparisonScope;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SafetyDto {
+        private String spotterPolicy;
+        private Map<String, String> notesI18n;
     }
 
     @Data
@@ -82,15 +188,16 @@ public class ExerciseDetailDto {
     @AllArgsConstructor
     public static class VariantDto {
         private UUID id;
+        private String code;
         private Map<String, String> nameI18n;
         private Map<String, String> descriptionI18n;
-        private Map<String, String> tipsI18n;
-        private String difficultyLevel;
-        private String mechanicsType;
-        private String forceType;
+        private String exerciseKind;
+        private String technicalDemand;
+        private String jointClass;
         private boolean isUnilateral;
         private boolean isBodyweight;
-        private Integer difficultyDelta;
+        /** WHAT differs from this exercise: grip, angle, equipment, rom... */
+        private String variationAxis;
     }
 
     @Data
@@ -112,46 +219,12 @@ public class ExerciseDetailDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CategoryNodeDto {
+    public static class CategoryDto {
         private UUID id;
         private String code;
         private Map<String, String> nameI18n;
         private Map<String, String> descriptionI18n;
-        private Integer categoryLevel;
         private boolean isPrimary;
-        private List<CategoryNodeDto> children;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SafetyDto {
-        private UUID id;
-        private String overallRiskLevel;
-        private boolean spotterRequired;
-        private Map<String, String> safetyNotesI18n;
-    }
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class MuscleAssociationDto {
-        private NamedResourceDto muscle;
-        private Integer activationPercentage;
-        /** lengthened / mid_range / shortened, relative to THIS muscle. */
-        private String lengthBias;
-        private Integer romStretchPct;
-        private Integer romContractPct;
-        /**
-         * Residual external load at maximum muscle length: distinguishes an
-         * exercise that merely reaches the stretch from one that loads it.
-         */
-        private Integer tensionAtStretch;
-        private Integer tensionAtContraction;
-        private boolean activeInsufficiency;
-        private boolean passiveInsufficiency;
     }
 
     @Data
@@ -160,6 +233,7 @@ public class ExerciseDetailDto {
     @AllArgsConstructor
     public static class EquipmentAssociationDto {
         private NamedResourceDto equipment;
+        private String equipmentClass;
         private boolean isRequired;
         private boolean isPrimary;
         private Integer quantityNeeded;
